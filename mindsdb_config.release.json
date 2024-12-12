@@ -1,15 +1,15 @@
 {
-    "config_version":"1.4",
+    "config_version":"2.2",
     "storage_dir": "/root/mdb_storage",
     "debug": false,
     "integrations": {},
     "api": {
         "http": {
-            "host": "0.0.0.0",
+            "host": "1.1.1.1",
             "port": "47334"
         },
         "mysql": {
-            "host": "0.0.0.0",
+            "host": "1.1.1.1",
             "password": "",
             "port": "47335",
             "user": "mindsdb",
@@ -17,7 +17,7 @@
             "ssl": true
         },
          "mongodb": {
-            "host": "0.0.0.0",
+            "host": "1.1.1.1",
             "port": "47336",
             "database": "mindsdb"
         }
