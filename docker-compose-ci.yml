@@ -13,7 +13,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 1s
       timeout: 1s
-      retries: 15
+      retries: 16
 
   migrations:
     command: bash -c "cd /mindsdb && python ./mindsdb/migrations/migrate.py"
@@ -61,8 +61,8 @@ services:
       - maria_db
     healthcheck:
       test:  ["CMD", "curl", "-f", "http://localhost:47334/api/util/ping"]
-      interval: 30s
-      timeout: 4s
+      interval: 60s
+      timeout: 5s
       retries: 100
 
   lightwood:
