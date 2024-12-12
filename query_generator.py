@@ -13,13 +13,14 @@ class QueryGenerator:
         :param parameters: A dictionary of parameters for the engine.
         :return: The generated SQL query as a string.
         """
-        parameter_str = ",\n  ".join([f'"{key}": "{value}"' if type(value) == str else f'"{key}": {value}' for key, value in parameters.items()])
-        query = f"""CREATE DATABASE {database_name}
+        parameter_str = ",\n  ".join(
+            [f'"{key}": "{value}"' if isinstance(value, str) else f'"{key}": {value}' for key, value in parameters.items()]
+        )
+        return f"""CREATE DATABASE {database_name}
                     WITH ENGINE = '{engine}',
                         PARAMETERS = {{
                         {parameter_str}
                     }};"""
-        return query
 
     @staticmethod
     def create_ml_engine_query(ml_engine_name: str, engine: str, parameters: dict) -> str:
@@ -31,6 +32,7 @@ class QueryGenerator:
         :param parameters: A dictionary of parameters for the engine.
         :return: The generated SQL query as a string.
         """
+        # Handle empty parameters gracefully
         parameters = parameters or {}
         parameter_str = ",\n  ".join([f"{key} = '{value}'" for key, value in parameters.items()])
         using_clause = f"\nUSING\n\t{parameter_str};" if parameters else ""
@@ -42,20 +44,19 @@ class QueryGenerator:
     @staticmethod
     def create_model(model_name: str, target_var: str, parameters: dict) -> str:
         """
-        Generate a CREATE ML ENGINE query with the given parameters.
+        Generate a CREATE MODEL query with the given parameters.
 
-        :param ml_engine_name: The name of the ML Engine to create.
-        :param engine: The ML Engine to use.
-        :param parameters: A dictionary of parameters for the engine.
+        :param model_name: The name of the model to create.
+        :param target_var: The target variable to predict.
+        :param parameters: A dictionary of parameters for the model.
         :return: The generated SQL query as a string.
         """
         parameter_str = ",\n  ".join([f'"{key}": "{value}"' for key, value in parameters.items()])
-        query = f"""CREATE MODEL {model_name}
+        return f"""CREATE MODEL {model_name}
                 PREDICT {target_var}
                 USING
                     {parameter_str}
                 ;"""
-        return query
 
     @staticmethod
     def simple_select_query(table_name: str, columns: list = None, limit: int = 10) -> str:
@@ -67,8 +68,7 @@ class QueryGenerator:
         :param limit: The number of rows to LIMIT the query to.
         :return: The generated SQL query as a string.
         """
-        columns = columns or ["*"]
+        columns = columns or ["*"]  # Default to selecting all columns if not specified
         column_str = ", ".join(columns)
         limit_str = f" LIMIT {limit}" if limit else ""
-        query = f"""SELECT {column_str} FROM {table_name}{limit_str};"""
-        return query
+        return f"""SELECT {column_str} FROM {table_name}{limit_str};"""
