@@ -1,25 +1,27 @@
 version: "3.2"
 
-
-# Runs a number of DBs for running unit tests against
+# Service definitions for various databases used for running unit tests
 services:
 
+  # MySQL service
   mysql:
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: supersecret
     ports:
-      - 3306:3306
+      - "3306:3306"
 
+  # PostgreSQL service
   postgres:
     image: postgres:15
     restart: always
     environment:
       POSTGRES_PASSWORD: supersecret
     ports:
-      - 5432:5432
-  
+      - "5432:5432"
+
+  # MongoDB service
   mongodb:
     image: mongo:6
     restart: always
@@ -27,8 +29,9 @@ services:
       MONGO_INITDB_ROOT_USERNAME: test_user
       MONGO_INITDB_ROOT_PASSWORD: supersecret
     ports:
-      - 27017:27017
-  
+      - "27017:27017"
+
+  # MSSQL service
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     restart: always
@@ -36,4 +39,4 @@ services:
       MSSQL_SA_PASSWORD: admin5678@
       ACCEPT_EULA: Y
     ports:
-      - 1433:1433
+      - "1433:1433"
