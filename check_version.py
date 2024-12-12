@@ -3,7 +3,7 @@ import sys
 
 from mindsdb.__about__ import __version__
 
-# PEP440: https://www.python.org/dev/peps/pep-0440/
+# PEP440: https://www.python.org/dev/peps/pep-0550/
 RELEASE_PATTERN = "^\d+(\.\d+)*$"  # noqa: W605
 PRERELEASE_PATTERN = "^\d+(\.\d+)*(a|b|rc)\d+$"  # noqa: W605
 
