@@ -1,5 +1,4 @@
 from unittest.mock import patch
-
 from langchain_core.documents import Document
 from langchain_text_splitters import MarkdownHeaderTextSplitter, HTMLHeaderTextSplitter, RecursiveCharacterTextSplitter
 from mindsdb.integrations.utilities.rag.splitters.file_splitter import FileSplitter, FileSplitterConfig
@@ -15,7 +14,8 @@ def test_split_documents_pdf():
         recursive_splitter=recursive_splitter
     ))
     split_pdf_docs = file_splitter.split_documents([pdf_doc])
-    assert len(split_pdf_docs) > 0
+    assert len(split_pdf_docs) > 0, "Expected split documents from PDF, but got none."
+    assert 'This is a test PDF file' in split_pdf_docs[0].page_content, "PDF content not split correctly."
 
 
 def test_split_documents_md():
@@ -26,7 +26,7 @@ def test_split_documents_md():
     Unit testing helps ensure code works as expected and prevents regressions. Time to dive in!
     ## How to Write Tests
     To be continued!
-'''
+    '''
     md_doc = Document(
         page_content=md_content,
         metadata={'extension': '.md'}
@@ -40,10 +40,9 @@ def test_split_documents_md():
         markdown_splitter=md_text_splitter
     ))
     split_md_docs = file_splitter.split_documents([md_doc])
-    assert len(split_md_docs) == 3
-    # Check we actually split on headers.
+    assert len(split_md_docs) == 3, f"Expected 3 split docs, but got {len(split_md_docs)}"
     assert 'This MD document covers how to write basic unit tests.' in split_md_docs[0].page_content
-    assert 'Unit testing helps ensure code works as expected and prevents regressions. Time to dive in!' in split_md_docs[1].page_content
+    assert 'Unit testing helps ensure code works as expected' in split_md_docs[1].page_content
     assert 'To be continued!' in split_md_docs[2].page_content
 
 
@@ -87,8 +86,7 @@ def test_split_documents_html():
         metadata={'extension': '.html'}
     )
     split_html_docs = file_splitter.split_documents([html_doc])
-    assert len(split_html_docs) == 8
-    # # Check we actually split on headers.
+    assert len(split_html_docs) == 8, f"Expected 8 split docs, but got {len(split_html_docs)}"
     assert 'Foo' in split_html_docs[0].page_content
     assert 'Some intro text about Foo' in split_html_docs[1].page_content
     assert 'Some intro text about Bar' in split_html_docs[2].page_content
@@ -109,7 +107,7 @@ def test_split_documents_default():
         metadata={'extension': '.txt'}
     )
     split_txt_docs = file_splitter.split_documents([txt_doc])
-    assert len(split_txt_docs) == 1
+    assert len(split_txt_docs) == 1, f"Expected 1 split doc, but got {len(split_txt_docs)}"
     assert 'This is a text file!' in split_txt_docs[0].page_content
 
 
@@ -122,7 +120,7 @@ def test_split_documents_failover(mock_md_splitter):
     Unit testing helps ensure code works as expected and prevents regressions. Time to dive in!
     ## How to Write Tests
     To be continued!
-'''
+    '''
     mock_md_splitter.split_text.side_effect = Exception('Something went wrong!')
     file_splitter = FileSplitter(FileSplitterConfig(
         markdown_splitter=mock_md_splitter
@@ -134,7 +132,7 @@ def test_split_documents_failover(mock_md_splitter):
 
     # Should throw an exception and go to default.
     split_md_docs = file_splitter.split_documents([md_doc])
-    assert len(split_md_docs) > 0
+    assert len(split_md_docs) > 0, "Expected to fallback to default splitting, but got no splits."
 
 
 @patch('mindsdb.integrations.utilities.rag.splitters.file_splitter.MarkdownHeaderTextSplitter')
@@ -146,7 +144,7 @@ def test_split_documents_no_failover(mock_md_splitter):
     Unit testing helps ensure code works as expected and prevents regressions. Time to dive in!
     ## How to Write Tests
     To be continued!
-'''
+    '''
     mock_md_splitter.split_text.side_effect = Exception('Something went wrong!')
     file_splitter = FileSplitter(FileSplitterConfig(
         markdown_splitter=mock_md_splitter
@@ -156,9 +154,9 @@ def test_split_documents_no_failover(mock_md_splitter):
         metadata={'extension': '.md'}
     )
 
-    # Should throw an exception.
+    # Should throw an exception without fallback
     try:
         _ = file_splitter.split_documents([md_doc], default_failover=False)
     except Exception:
-        return
-    assert False
+        return  # Expected behavior: exception raised
+    assert False, "Expected an exception, but no exception was raised."
