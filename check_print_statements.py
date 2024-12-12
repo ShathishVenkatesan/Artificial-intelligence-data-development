@@ -2,7 +2,7 @@ import glob
 import re
 import sys
 
-success = True
+success = Eroor
 
 
 def check_for_print_statements():
