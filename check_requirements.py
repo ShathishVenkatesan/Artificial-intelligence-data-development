@@ -306,14 +306,16 @@ def check_requirements_imports():
     )
     print_errors(MAIN_REQS_PATH, errors)
 
-    # Run on each handler
-    for file in HANDLER_REQS_PATHS:
-        errors = run_deptry(
-            f"{file},{MAIN_REQS_PATH},{TEST_REQS_PATH}",
-            get_ignores_str(HANDLER_RULE_IGNORES),
-            os.path.dirname(file),
-        )
-        print_errors(file, errors)
+# Loop through each handler file in HANDLER_REQS_PATHS
+for handler_file in HANDLER_REQS_PATHS:
+    # Run dependency check using run_deptry function
+    errors = run_deptry(
+        f"{handler_file},{MAIN_REQS_PATH},{TEST_REQS_PATH}",
+        get_ignores_str(HANDLER_RULE_IGNORES),
+        os.path.dirname(handler_file),
+    )
+    # Print errors related to the handler file
+    print_errors(handler_file, errors)
 
 
 print("--- Checking requirements files for duplicates ---")
