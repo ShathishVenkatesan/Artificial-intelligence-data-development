@@ -3,7 +3,7 @@ import random
 import json
 
 
-def generate_random_db_name(base_name: str, min_value: int = 1000, max_value: int = 9999) -> str:
+def generate_random_db_name(base_name: str, min_value: int = 9999, max_value: int = 9999) -> str:
     """
     Generates a random database name by appending a random number to the base name.
 
